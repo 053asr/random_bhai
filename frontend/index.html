@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Categorization</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js" integrity="sha512-ml/QKfG3+Yes6TwOzQb7aCNtJF4PUyha6R3w8pSTo/VJSywl7ZreYvvtUso7fKevpsI+pYVVwnu82YO0q3V6eg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <style>
+    body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+  padding: 0;
+  background-image: url('bg3.jpg'); /* Replace with your image URL */
+  background-repeat: repeat;
+  /* background-size: cover; Optional: cover the entire background */
+  /* background-position: center; Optional: center the background image */
+  font-family: 'Arial', sans-serif; /* Optional: set a font for the text on top of the background */
+  color: #ffffff; /* Optional: set the text color */
+   }
+
+   :root {
+  --primary-color: #0964b0;
+}
+
+    img{
+        height: 100px;
+        width: 300px;
+        padding-top: 2%;
+        padding-bottom: 2%;
+        padding-left: 25%;
+    }
+
+.container {
+    max-width: 100%;
+    
+    margin: 0 auto;
+    padding: 0 ;
+    display: flex;
+    justify-content: space-between; /* Added to distribute space between logo and nav */
+    /* background-color: #007bff; */
+    color: #fff;
+    padding:  0;
+}
+
+nav ul {
+    list-style-type: none;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-right: 150px;
+    display: flex; /* Display as flex container */
+    flex-direction: row; /* Align items horizontally */
+}
+
+nav ul li {
+    margin-left: 30px;
+}
+
+nav ul li:first-child {
+    margin-left: 0;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 25px;
+    transition: color 0.3s ease;
+}
+
+/* nav ul li a:hover {
+    color: #040404;
+} */
+
+footer {
+      /* background-color: #007bff; */
+      color: #fff;
+      text-align: center;
+      padding: 10px 0;
+    }
+
+main{
+    align-items: center;
+}
+
+.pdfwork{
+  
+  justify-content: center;
+  align-items: center;
+  /* padding-left: 40%; */
+  /* margin-top: 15%; */
+}
+
+
+
+
+
+.upload-section {
+  /* background-color: #6a2424; */
+  padding: 32px;
+  border-radius: 20px;
+  width: 20%;
+  margin-top: 7%;
+  margin-left: 35%;
+}
+
+input[type="file"] {
+  padding: 4px;
+  margin: -4px;
+  position: relative;
+  outline: none;
+
+  /* File Selector Button Styles */
+  &::file-selector-button {
+    border-radius: 4px;
+    padding: 0 16px;
+    height: 40px;
+    cursor: pointer;
+    background-color: white;
+    border: 1px solid rgba(#000, 0.16);
+    box-shadow: 0px 1px 0px rgba(#000, 0.05);
+    margin-right: 16px;
+
+    /*
+      This is a hack to change the button label. 
+      I'm hiding the default label and then 
+      manually applying the width based on 
+      updated icon and label.
+    */
+    width: 132px;
+    color: transparent;
+    
+    /*
+      Firefox doesn't support the pseudo ::before 
+      or ::after elements on this input field so 
+      we need to use the @supports rule to enable 
+      default styles fallback for Firefox.
+    */
+    @supports (-moz-appearance: none) {
+      color: var(--primary-color);
+    }
+
+    &:hover {
+      background-color: #f3f4f6;
+    }
+
+    &:active {
+      background-color: #e5e7eb;
+    }
+  }
+
+  /* Faked label styles and icon */
+  &::before {
+    position: absolute;
+    pointer-events: none;
+    top: 14px;
+    left: 16px;
+    height: 20px;
+    width: 20px;
+    content: "";
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230964B0'%3E%3Cpath d='M18 15v3H6v-3H4v3c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-3h-2zM7 9l1.41 1.41L11 7.83V16h2V7.83l2.59 2.58L17 9l-5-5-5 5z'/%3E%3C/svg%3E");
+  }
+  
+  &::after {
+    position: absolute;
+    pointer-events: none;
+    top: 16px;
+    left: 40px;
+    color: var(--primary-color);
+    content: "Upload File";
+  }
+
+  /* Handle Component Focus */
+  &:focus-within::file-selector-button,
+  &:focus::file-selector-button {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+  }
+}
+
+.upload{
+  height: 200px;
+  width: 300px;
+}
+/* Center loading spinner */
+.loader {
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 4px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+  margin: auto;
+  margin-top: 20px;
+}
+
+/* Center predicted label */
+#result {
+  text-align: center;
+  margin-top: 20px;
+}
+
+
+    
+  </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo1.png" alt="Logo">
+                
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="/category.html">Categories</a></li>
+                    <li><a href="#">Architecture</a></li>
+                    <!-- <li><a href="#">Contact</a></li> -->
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+
+  
+
+  <main>
+    <div class="upload-section">
+      <!-- Create a div container for the file upload form -->
+      <div class="pdfwork">
+          <!-- Display text "Select PDF" -->
+          <!-- <span>Select PDF</span> -->
+  
+          <!-- Hidden input field for selecting the PDF file -->
+          <input type="file" class="selectpdf" id="fileInput" style="display: none;">
+  
+          <!-- Label with an image acting as the button -->
+          <label for="fileInput" class="upload-button">
+              <img class="upload" src="uploadlogo.png" alt="Select PDF">
+          </label>
+      </div>
+  </div>
+  <div id="loading" style="display: none;">
+    <div class="loader"></div>
+    <p>Loading...</p>
+  </div>
+  <div id="result" style="display: none;">
+    <h3>Predicted Label:</h3>
+    <p id="predicted-label"></p>
+  </div>
+  </main>
+
+  <br>
+
+  <script>
+    // Set the worker source for PDF.js library
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+    
+    // Get references to various elements
+    let pdfinput = document.querySelector(".selectpdf"); // Reference to the PDF file input field
+    
+    // Event listener for the file input change event
+   // Event listener for the file input change event
+    pdfinput.addEventListener('change', () => {
+      let file = pdfinput.files[0]; // Get the selected PDF file
+      if (file != undefined && file.type == "application/pdf") {
+        let fr = new FileReader(); // Create a new FileReader object
+        fr.readAsDataURL(file); // Read the file as data URL
+        fr.onload = () => {
+          let res = fr.result; // Get the result of file reading
+          document.getElementById('loading').style.display = 'block'; // Show loading spinner
+          document.getElementById('result').style.display = 'none'; // Hide result section
+          extractText(res); // Extract text
+        }
+      } else {
+        alert("Select a valid PDF file");
+      }
+    });
+
+    // Asynchronous function to extract text from the PDF
+    async function extractText(url) {
+      try {
+        let pdf = await pdfjsLib.getDocument(url).promise; // Get the PDF document
+        let pages = pdf.numPages; // Get the total number of pages in the PDF
+        for (let i = 1; i <= pages; i++) {
+          let page = await pdf.getPage(i); // Get the page object for each page
+          let txt = await page.getTextContent(); // Get the text content of the page
+          let text = txt.items.map((s) => s.str).join(""); // Concatenate the text items into a single string
+          console.log(text); // Print the extracted text to the console
+          let data = []
+          data.push(text);
+          await sendToAPI(data)
+        }
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    async function sendToAPI(textArray) {
+      try {
+        // Create the JSON object with the extracted text
+        let data = {
+          paragraphs: textArray
+        };
+
+        let response = await fetch('http://127.0.0.1:8000/predictparagraph', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+        if (response.ok) {
+          let responseData = await response.json();
+          let predictedLabel = responseData.predicted_labels[0]; // Get the predicted label (assuming there is only one)
+          document.getElementById('predicted-label').textContent = predictedLabel; // Display predicted label
+          document.getElementById('loading').style.display = 'none'; // Hide loading spinner
+          document.getElementById('result').style.display = 'block'; // Show result section
+        } else {
+          throw new Error('Failed to send data to API');
+        }
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+</script>
+
+  <!-- <footer>
+    <p>&copy; 2024 Document Categorization</p>
+  </footer> -->
+</body>
+</html>
